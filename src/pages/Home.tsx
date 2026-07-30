@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import useEstimate from '../hooks/useEstimate';
 import Loading from "../components/loading";
+import { useNavigate } from 'react-router-dom';
 
 export default function Home() {
   const [inputForm, setInputForm] = useState({
@@ -12,10 +13,12 @@ export default function Home() {
   });
 
   const { data, loading, err, fetchEstimate } = useEstimate();
+  const navigate = useNavigate();
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    fetchEstimate(inputForm);
+    const estimate = await fetchEstimate(inputForm);
+    navigate("/response", { state: estimate });
   }
 
   if (loading) return <Loading />;

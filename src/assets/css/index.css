@@ -116,3 +116,10 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+
+#loading-component {
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: auto;
+}

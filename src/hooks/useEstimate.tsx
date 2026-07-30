@@ -7,8 +7,6 @@ export default function useEstimate() {
   const [err, setError] = useState<string | null>(null);
 
   async function fetchEstimate(formData) {
-    console.log('fetching estimate');
-
     setLoading(true)
 
     try {
@@ -16,9 +14,9 @@ export default function useEstimate() {
       const data = await getEstimate(formData);
       setData(data)
       setLoading(false)
-
+      return data;
     } catch {
-      setError('Error when fetching prompt');
+      setError('Error when sending prompt');
     }
 
     setLoading(false);

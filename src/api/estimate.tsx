@@ -77,25 +77,27 @@ function createPrompt(formData) {
 
 
 export async function getEstimate(formData) {
-  console.log('intializing ai')
-  const ai = new GoogleGenAI({});
+  try {
+    const ai = new GoogleGenAI({
+      apiKey: 'INSERT_API_KEY'
+    });
 
-  console.log('creating prompt')
-  const prompt = createPrompt(formData);
+    console.log('creating prompt');
+    const prompt = createPrompt(formData);
+    console.log('prompt created');
 
-  const interaction = await ai.interactions.create({
-    model: "gemini-3.6-flash",
-    input: prompt,
-    response_format: {
-      type: "text",
-      mime_type: "application/json",
-      schema: estimateSchema
-    }
-  });
+    const response = await ai.models.generateContent({
+      model: 'gemini-3.6-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+        responseSchema: estimateSchema,
+      }
+    });
 
-  console.log('interaction created')
-
-  console.log(interaction.output_text);
-
-  // return JSON.parse(interaction.output_text);
+    return JSON.parse(response.text);
+  } catch (error) {
+    console.error('Error generating estimate:', error);
+    throw error;
+  }
 }
