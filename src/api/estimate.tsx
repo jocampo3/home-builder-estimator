@@ -45,7 +45,16 @@ const estimateSchema = {
 };
 
 
-function createPrompt(formData) {
+export type FormData = {
+  zip: string;
+  sqft: string;
+  numOfBeds: string;
+  numOfBaths: string;
+  desiredFinishes: string;
+};
+
+
+function createPrompt(formData: FormData) {
   return `
     You are an AI construction cost estimator specializing in residential home builds.
 
@@ -76,10 +85,10 @@ function createPrompt(formData) {
 }
 
 
-export async function getEstimate(formData) {
+export async function getEstimate(formData: FormData) {
   try {
     const ai = new GoogleGenAI({
-      apiKey: 'INSERT_API_KEY'
+      apiKey: ''
     });
 
     console.log('creating prompt');
@@ -95,9 +104,15 @@ export async function getEstimate(formData) {
       }
     });
 
-    return JSON.parse(response.text);
+    const text = response.text;
+    if (!text) {
+      throw new Error('Empty response from AI service');
+    }
+
+    return JSON.parse(text);
   } catch (error) {
     console.error('Error generating estimate:', error);
-    throw error;
+    const message = error instanceof Error ? error.message : 'Unknown error occurred';
+    throw new Error(message, { cause: error });
   }
 }

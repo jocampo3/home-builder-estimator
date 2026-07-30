@@ -13,6 +13,23 @@ export default function Response() {
     );
   }
 
+  const estimate = Array.isArray(state.estimate) ? state.estimate : [];
+  const factors = Array.isArray(state.factors) ? state.factors : [];
+  const recommendations = Array.isArray(state.recommendations) ? state.recommendations : [];
+  const assumptions = Array.isArray(state.assumptions) ? state.assumptions : [];
+
+  const hasMalformedData = estimate.length === 0 && factors.length === 0 && recommendations.length === 0 && assumptions.length === 0;
+
+  if (hasMalformedData) {
+    return (
+      <section className="flex justify-center items-center min-h-screen">
+        <div className="alert alert-error max-w-md">
+          <span>Estimate data is incomplete or malformed. Please try again.</span>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="max-w-5xl mx-auto p-6 space-y-6">
       <div className="text-center">
@@ -32,7 +49,7 @@ export default function Response() {
           </h2>
 
           <div className="space-y-2 mt-4">
-            {state.estimate.map((item: string, index: number) => (
+            {estimate.map((item: string, index: number) => (
               <div
                 key={index}
                 className="bg-base-100 rounded-lg p-4"
@@ -52,7 +69,7 @@ export default function Response() {
           </h2>
 
           <ul className="list-disc list-inside space-y-2 mt-4">
-            {state.factors.map((factor: string, index: number) => (
+            {factors.map((factor: string, index: number) => (
               <li key={index}>
                 {factor}
               </li>
@@ -69,7 +86,7 @@ export default function Response() {
           </h2>
 
           <div className="space-y-3 mt-4">
-            {state.recommendations.map((recommendation: string, index: number) => (
+            {recommendations.map((recommendation: string, index: number) => (
               <div
                 key={index}
                 className="alert alert-info"
@@ -89,7 +106,7 @@ export default function Response() {
           </h2>
 
           <ul className="list-disc list-inside space-y-2 mt-4">
-            {state.assumptions.map((assumption: string, index: number) => (
+            {assumptions.map((assumption: string, index: number) => (
               <li key={index}>
                 {assumption}
               </li>
